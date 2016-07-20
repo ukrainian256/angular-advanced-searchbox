@@ -26,7 +26,8 @@
                        typeahead-editable="searchParam.restrictToSuggestedValues !== true"
                        typeahead-select-on-exact="true"
                        typeahead-select-on-blur="searchParam.restrictToSuggestedValues !== true ? false : true"
-                       placeholder="{{searchParam.placeholder}}" />
+                       placeholder="{{searchParam.placeholder}}" 
+                       ng-click="enterEditMode($event, $index)" />
             </div>
         </div>
         <input name="searchbox"
@@ -43,7 +44,7 @@
                ng-change="searchQueryChanged(searchQuery)"
                ng-model="searchQuery" />
     </div>
-    <div class="search-parameter-suggestions" ng-show="parameters && focus">
+    <div class="search-parameter-suggestions" ng-show="parameters && focus && canAddParameter()">
         <span class="title">{{parametersLabel}}:</span>
         <span class="search-parameter" ng-repeat="param in parameters | filter:isUnsedParameter | limitTo:parametersDisplayLimit" 
           data-key="{{param.key}}"
