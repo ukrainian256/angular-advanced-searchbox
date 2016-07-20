@@ -26,7 +26,8 @@
                        typeahead-editable="searchParam.restrictToSuggestedValues !== true"
                        typeahead-select-on-exact="true"
                        typeahead-select-on-blur="searchParam.restrictToSuggestedValues !== true ? false : true"
-                       placeholder="{{searchParam.placeholder}}" />
+                       placeholder="{{searchParam.placeholder}}" 
+                       ng-click="enterEditMode($event, $index)" />
             </div>
         </div>
         <input name="searchbox"
