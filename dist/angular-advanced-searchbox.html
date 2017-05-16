@@ -20,14 +20,15 @@
                        ng-show="searchParam.editMode"
                        ng-change="searchParam.restrictToSuggestedValues !== true ? searchParamValueChanged(searchParam) : null"
                        ng-model="searchParam.value"
-                       uib-typeahead="suggestedValue for suggestedValue in searchParam.suggestedValues | filter:$viewValue"
+                       uib-typeahead="suggestedValue as suggestedValue.name for suggestedValue in searchParam.suggestedValues | filter:$viewValue"
                        typeahead-min-length="0"
                        typeahead-on-select="searchParamTypeaheadOnSelect($item, searchParam)"
                        typeahead-editable="searchParam.restrictToSuggestedValues !== true"
                        typeahead-select-on-exact="true"
                        typeahead-select-on-blur="searchParam.restrictToSuggestedValues !== true ? false : true"
                        placeholder="{{searchParam.placeholder}}"
-                       ng-click="enterEditMode($event, $index)" />
+                       ng-click="enterEditMode($event, $index)"
+                       ng-trim="false" />
             </div>
         </div>
         <input name="searchbox"
