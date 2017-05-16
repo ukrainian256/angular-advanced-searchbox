@@ -10,7 +10,7 @@ A directive for AngularJS providing a advanced visual search box.
 Include with bower
 
 ```sh
-bower install angular-advanced-searchbox
+bower install https://github.com/Cordobo/angular-advanced-searchbox.git
 ```
 
 The bower package contains files in the ```dist/```directory with the following names:
