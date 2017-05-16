@@ -10,7 +10,7 @@
             </a>
             <div class="key" data-key="{{searchParam.key}}" ng-click="enterEditMode($event, $index)">{{searchParam.name}}:</div>
             <div class="value">
-                <span ng-show="!searchParam.editMode" ng-click="enterEditMode($event, $index)">{{searchParam.value}}</span>
+                <span ng-show="!searchParam.editMode" ng-click="enterEditMode($event, $index)">{{searchParam.value | toString:searchParam.suggestedToString}}</span>
                 <input name="value"
                        type="{{searchParam.type}}"
                        nit-auto-size-input
@@ -26,7 +26,7 @@
                        typeahead-editable="searchParam.restrictToSuggestedValues !== true"
                        typeahead-select-on-exact="true"
                        typeahead-select-on-blur="searchParam.restrictToSuggestedValues !== true ? false : true"
-                       placeholder="{{searchParam.placeholder}}" 
+                       placeholder="{{searchParam.placeholder}}"
                        ng-click="enterEditMode($event, $index)" />
             </div>
         </div>
@@ -46,7 +46,7 @@
     </div>
     <div class="search-parameter-suggestions" ng-show="parameters && focus && canAddParameter()">
         <span class="title">{{parametersLabel}}:</span>
-        <span class="search-parameter" ng-repeat="param in parameters | filter:isUnsedParameter | limitTo:parametersDisplayLimit" 
+        <span class="search-parameter" ng-repeat="param in parameters | filter:isUnsedParameter | limitTo:parametersDisplayLimit"
           data-key="{{param.key}}"
           ng-mousedown="addSearchParam(param)">
           {{param.name}} <i ng-class="{'glyphicon glyphicon-plus': param.allowMultiple}"></i>

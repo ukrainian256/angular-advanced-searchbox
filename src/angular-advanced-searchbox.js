@@ -120,6 +120,7 @@ angular.module('angular-advanced-searchbox', [])
 
                         $scope.$emit('advanced-searchbox:enteredEditMode', searchParam);
                     };
+
                     /**
                      * Fix to prevent ignoring of the Click-Selection of a typeahead Element
                      **/
@@ -130,6 +131,7 @@ angular.module('angular-advanced-searchbox', [])
                             return  $scope.leaveEditMode(e,index);
                         }
                     };
+
                     $scope.leaveEditMode = function(e, index) {
                         if (index === undefined)
                             return;
@@ -194,6 +196,7 @@ angular.module('angular-advanced-searchbox', [])
                                     placeholder: searchParam.placeholder,
                                     allowMultiple: searchParam.allowMultiple || false,
                                     suggestedValues: searchParam.suggestedValues || [],
+                                    suggestedToString: searchParam.suggestedToString || '',
                                     restrictToSuggestedValues: searchParam.restrictToSuggestedValues || false,
                                     index: internalIndex,
                                     value: value || ''
@@ -461,5 +464,11 @@ angular.module('angular-advanced-searchbox', [])
                 }
             };
         }
-    ]);
+    ])
+    .filter('toString', function() {
+        return function(input, customToString) {
+            customToString = customToString || String;
+            return customToString(input);
+        };
+    });
 })();
