@@ -33,7 +33,7 @@ angular.module('angular-advanced-searchbox', [])
                     $scope.parametersLabel = $scope.parametersLabel || 'Parameter Suggestions';
                     $scope.parametersDisplayLimit = $scope.parametersDisplayLimit || 8;
                     $scope.placeholder = $scope.placeholder || 'Search ...';
-                    $scope.searchThrottleTime = $scope.searchThrottleTime || 1000;
+                    $scope.searchThrottleTime = $scope.searchThrottleTime || 750;
                     $scope.searchParams = [];
                     $scope.searchQuery = '';
                     $scope.setFocusFor = setFocusFor;
@@ -186,15 +186,18 @@ angular.module('angular-advanced-searchbox', [])
                     };
 
                     $scope.addSearchParam = function (searchParam, value, enterEditModel) {
-                        if (enterEditModel === undefined)
+                        if (enterEditModel === undefined) {
                             enterEditModel = true;
+                        }
 
-                        if (!$scope.isUnsedParameter(searchParam))
+                        if (!$scope.isUnsedParameter(searchParam)) {
                             return;
+                        }
 
                         var internalIndex = 0;
-                        if(searchParam.allowMultiple)
+                        if(searchParam.allowMultiple) {
                             internalIndex = $filter('filter')($scope.searchParams, function (param) { return param.key === searchParam.key; }).length;
+                        }
 
                         var newIndex =
                             $scope.searchParams.push(
@@ -215,7 +218,9 @@ angular.module('angular-advanced-searchbox', [])
                         updateModel('add', searchParam.key, internalIndex, value);
 
                         if (enterEditModel === true) {
-                            $timeout(function() { $scope.enterEditMode(undefined, newIndex); }, 100);
+                            $timeout(function() {
+                                $scope.enterEditMode(undefined, newIndex);
+                            }, 250);
                         }
 
                         $scope.$emit('advanced-searchbox:addedSearchParam', searchParam);
@@ -284,6 +289,9 @@ angular.module('angular-advanced-searchbox', [])
 
                     $scope.keydown = function(e, searchParamIndex) {
                         var handledKeys = [8, 9, 13, 32, 37, 39];
+
+                        // console.log('keydown e: ', e);
+                        // console.log('keydown searchParamIndex: ', searchParamIndex);
 
                         if (handledKeys.indexOf(e.which) === -1) {
                             return;
@@ -416,6 +424,8 @@ angular.module('angular-advanced-searchbox', [])
                 restrict: 'A',
                 link: function($scope, $element, $attrs) {
                     return $scope.$on('advanced-searchbox:setFocusOn', function(e, id) {
+                        // console.log('setFocusOn e: ', e);
+                        // console.log('setFocusOn id: ', id);
                         if ($scope.isSpacebarKey === true) {
                             $scope.isSpacebarKey = false;
                             e.preventDefault();
@@ -429,9 +439,7 @@ angular.module('angular-advanced-searchbox', [])
             };
         }
     ])
-    .factory('setFocusFor', [
-        '$rootScope', '$timeout',
-        function($rootScope, $timeout) {
+    .factory('setFocusFor', [ '$rootScope', '$timeout', function($rootScope, $timeout) {
             return function(id) {
                 return $timeout(function() {
                     return $rootScope.$broadcast('advanced-searchbox:setFocusOn', id);
@@ -439,9 +447,7 @@ angular.module('angular-advanced-searchbox', [])
             };
         }
     ])
-    .directive('nitAutoSizeInput', [
-        '$timeout',
-        function($timeout) {
+    .directive('nitAutoSizeInput', [ '$timeout', function($timeout) {
             return {
                 restrict: 'A',
                 scope: {
