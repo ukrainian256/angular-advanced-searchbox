@@ -196,6 +196,7 @@ angular.module('angular-advanced-searchbox', [])
                                     placeholder: searchParam.placeholder,
                                     allowMultiple: searchParam.allowMultiple || false,
                                     suggestedValues: searchParam.suggestedValues || [],
+                                    suggestedToString: searchParam.suggestedToString || '',
                                     restrictToSuggestedValues: searchParam.restrictToSuggestedValues || false,
                                     index: internalIndex,
                                     value: value || ''
