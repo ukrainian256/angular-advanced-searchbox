@@ -2,53 +2,72 @@
     display: block;
     position: relative;
     margin: 5px 0 10px 0;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    -webkit-border-radius: 4px;
-    -moz-border-radius: 4px;
     min-height: 40px;
-    padding: 0 9px;
     background-color: #fff;
     cursor: text;
     line-height: 38px;
 }
 
+.advancedSearchBox:focus {
+    outline: none;
+}
+
+.advancedSearchBox .searchBox {
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    padding: 0 9px;
+}
+
+.advancedSearchBox .searchBox .search-parameter,
+.advancedSearchBox .searchBox input {
+    font-size: 12px;
+}
+
+
+.advancedSearchBox.active .searchBox {
+    border-color: #66afe9;
+}
+
     .advancedSearchBox.active {
-        border-color: #66afe9;
+        /* border-color: #66afe9; */
     }
 
     .advancedSearchBox .search-icon {
         float: right;
-        padding: 10px 0 0 10px;
+        padding: 13px 13px 0 10px;
     }
 
     .advancedSearchBox .remove-all-icon {
         float: right;
-        padding: 10px 0 0 10px;
+        padding: 13px 15px 0 10px;
         cursor: pointer;
     }
 
     .advancedSearchBox .search-parameter {
+        /* background-color: #5bc0de; */
+        background-color: transparent;
+        border-radius: 3px;
+        cursor: default;
         display: inline-block;
         height: 24px;
-        margin: 0 7px 0 0;
-        background-color: #5bc0de;
-        padding: 0 5px;
-        border-radius: 4px;
-        -webkit-border-radius: 4px;
-        -moz-border-radius: 4px;
         line-height: 24px;
-        cursor: default;
+        margin: 8px 2px 0 0;
+        padding: 0 5px;
         transition: box-shadow 100ms linear;
     }
 
+    .advancedSearchBox .searchBox .search-parameter {
+        float: left;
+    }
+
         .advancedSearchBox .search-parameter:hover {
-            box-shadow: 0 3px 3px rgba(0,0,0,0.2);
+            background-color: #e2e9ed;
+            box-shadow: 0 3px 3px rgba(0, 0, 0, 0.2);
         }
 
         .advancedSearchBox .search-parameter div {
             float: left;
-            margin: 0 2px;
+            margin: 0 2px 0 0;
         }
 
         .advancedSearchBox .search-parameter .remove {
@@ -58,15 +77,23 @@
         }
 
         .advancedSearchBox .search-parameter .key {
-            color: #fff;
+            color: #666;
         }
 
         .advancedSearchBox .search-parameter .value span {
-            color: #fff;
+            color: #666;
         }
 
         .advancedSearchBox .search-parameter .value input {
             height: 24px;
+        }
+
+    .advancedSearchBox .search-entry {
+        float: left;
+    }
+
+        .advancedSearchBox .search-entry .match {
+            font-weight: bold;
         }
 
     .advancedSearchBox .search-parameter-input {
@@ -83,24 +110,20 @@
             outline: none;
         }
 
-
-
     .advancedSearchBox .search-parameter-suggestions {
         cursor: auto;
         display: block;
     }
 
         .advancedSearchBox .search-parameter-suggestions .title {
-            display: block;
-            float: left;
-            height: 25px;
-            margin: 7px 7px 0 0;
-            background-color: transparent;
             color: #888;
-            font-weight: bold;
-            padding: 0 5px;
+            display: inline-block;
             font-size: 14px;
+            font-weight: 600;
+            height: 25px;
             line-height: 25px;
+            margin: 7px 7px 0 0;
+            padding: 0 5px 0 0;
         }
 
         .advancedSearchBox .search-parameter-suggestions .search-parameter {
