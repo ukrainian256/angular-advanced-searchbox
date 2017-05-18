@@ -153,30 +153,6 @@ angular.module('angular-advanced-searchbox', [])
                         $scope.searchParamValueChanged(searchParam);
                     };
 
-                    $scope.isUnusedParameter = function (value, index) {
-                        // @TODO Refactor if needed, else delete
-                        // var myFilterTest = $filter('filter')($scope.searchParams, function (param) {
-                        //     return param.key === value.key && !param.allowMultiple;
-                        // }).length === 0;
-                        // return myFilterTest;
-                        return true;
-                    };
-
-                    $scope.canAddParameter = function () {
-                      var availableParameters = $scope.parameters.length;
-                        for (var i = 0; i < $scope.parameters.length; i++) {
-                            if (!$scope.parameters[i].allowMultiple) {
-                                for ( var j = 0; j < $scope.searchParams.length; j++) {
-                                  if ($scope.parameters[i].key === $scope.searchParams[j].key) {
-                                    availableParameters -= 1;
-                                    break;
-                                  }
-                                }
-                            }
-                        }
-                        return availableParameters > 0;
-                    };
-
                     $scope.addSearchParam = function (searchParam, value, enterEditModel) {
 
                         console.log('Running addSearchParam - searchParam, value, enterEditModel: ', searchParam, value, enterEditModel);
@@ -184,10 +160,6 @@ angular.module('angular-advanced-searchbox', [])
                         if (enterEditModel === undefined) {
                             enterEditModel = true;
                         }
-
-                        // if (!$scope.isUnusedParameter(searchParam)) {
-                        //     return;
-                        // }
 
                         var internalIndex = $scope.model.length;
 
@@ -198,7 +170,6 @@ angular.module('angular-advanced-searchbox', [])
                                     name: searchParam.name,
                                     type: searchParam.type || 'text',
                                     placeholder: searchParam.placeholder,
-                                    allowMultiple: searchParam.allowMultiple || false,
                                     suggestedValues: searchParam.suggestedValues || [],
                                     suggestedToString: searchParam.suggestedToString || '',
                                     restrictToSuggestedValues: searchParam.restrictToSuggestedValues || false,
@@ -494,9 +465,6 @@ angular.module('angular-advanced-searchbox', [])
                                     $scope.model.splice(change.index, 1, change);
                                 }
 
-                                // @TODO
-                                // if (searchParam && searchParam.allowMultiple) {
-                                // }
                             });
 
                             changeBuffer.length = 0;

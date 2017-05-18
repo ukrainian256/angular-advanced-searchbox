@@ -70,7 +70,7 @@
                     </a>
                 </li>
                 <!-- Step 2 -->
-                <li ng-repeat="parameter in filteredArr" xxx-ng-show="facetSelected">
+                <li class="hide" ng-repeat="parameter in filteredArr" xxx-ng-show="facetSelected">
                     <a ng-click="optionClicked($index, $event, parameter)"
                        ng-show="!isMatchLabel(parameter)">
                        {{ parameter.name }}
@@ -80,25 +80,31 @@
                        {{ parameter.label[0] }}<span class="match">{{ parameter.label[1] }}</span>{{ parameter.label[2] }}
                     </a>
                 </li>
+                <li class="divider"></li>
+                <li><a href="">Reset filters</a></li>
             </ul>
 
         </div>
     </div>
-    <div class="search-parameter-suggestions clearfix" xxx-ng-show="parameters && focus && canAddParameter()">
+    <div class="search-parameter-suggestions clearfix" xxx-ng-show="parameters && focus">
         <span class="title">{{parametersLabel}}:</span>
         <span class="search-parameter" ng-repeat="param in parameters | filter:isUnusedParameter | limitTo:parametersDisplayLimit"
           data-key="{{param.key}}"
           ng-mousedown="addSearchParam(param)">
-          {{param.name}} <i ng-class="{'glyphicon glyphicon-plus': param.allowMultiple}"></i>
+          {{param.name}}
         </span>
     </div>
 
-    <strong>searchQuery:</strong> {{searchQuery | json }}
-    <br>
-    <strong>searchParams</strong>
-    <br>LENGTH: {{searchParams.length}}
-    <br>CONTENT {{searchParams | json}}
-    <!-- <br>
-    filteredArr: {{filteredArr | json }} -->
+    <div class="small">
+        <strong>parameters: </strong> {{ parameters | json }}
+        <br>
+        <strong>filteredArr</strong>: {{filteredArr | json }}
+        <br>
+        <strong>searchQuery:</strong> {{searchQuery | json }}
+        <br>
+        <strong>searchParams</strong>
+        <br>LENGTH: {{searchParams.length}}
+        <br>CONTENT {{searchParams | json}}
+    </div>
 
 </div>
