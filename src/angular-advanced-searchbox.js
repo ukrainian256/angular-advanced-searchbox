@@ -66,22 +66,18 @@ angular.module('angular-advanced-searchbox', [])
                             return;
                         }
 
-                        var iM,
-                            a = $scope.model;
-                        for (iM = 0; iM < a.length; iM++) {
-                            console.log('$scope.$watch: ', a[iM]);
-                        }
-
                         // delete not existing search parameters from internal state array
-                        /*
-                        for (var i = $scope.searchParams.length - 1; i >= 0; i--) {
+                        // @TODO START
+                        for (var i = 0; i < $scope.searchParams.length; i++) {
                             var value = $scope.searchParams[i];
+                            console.log('$scope.$watch: value', value);
                             if (!$scope.model.hasOwnProperty(value.key)) {
                                 var index = $scope.searchParams.map(function(e) { return e.key; }).indexOf(value.key);
+                                console.log('$scope.$watch: index', index);
                                 $scope.removeSearchParam(index);
                             }
                         }
-                        */
+                        // @TODO END
 
                     }, true); // END WATCH MODEL
 
