@@ -54,12 +54,11 @@
             <ul class="dropdown-menu" uib-dropdown-menu role="menu">
                 <!-- Step 0 - show only, if we have 1 or more search queries -->
                 <li>
-                    <a href="" ng-click="">
+                    <a href="" ng-click="" class="btn btn-primary" style="margin-left: 4px; margin-right: 4px; color: #fff; margin-bottom: 4px;">
                         <i class="glyphicon glyphicon-search"></i>
                         Search
                     </a>
                 </li>
-                <li class="divider"></li>
                 <!-- Step 1 -->
                 <li ng-repeat="parameter in filteredArr" xxx-ng-show="!facetSelected">
                     <a ng-click="searchQueryTypeaheadOnSelect(parameter)"
