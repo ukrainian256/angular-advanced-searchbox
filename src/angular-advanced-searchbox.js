@@ -224,15 +224,6 @@ angular.module('angular-advanced-searchbox', [])
                         var searchParam = $scope.searchParams[index];
                         $scope.searchParams.splice(index, 1);
 
-                        // reassign internal index
-                        if (searchParam.allowMultiple) {
-                            var paramsOfSameKey = $filter('filter')($scope.searchParams, function (param) { return param.key === searchParam.key; });
-
-                            for (var i = 0; i < paramsOfSameKey.length; i++) {
-                                paramsOfSameKey[i].index = i;
-                            }
-                        }
-
                         updateModel('delete', searchParam.key, searchParam.index);
 
                         $scope.$emit('advanced-searchbox:removedSearchParam', searchParam);
@@ -457,19 +448,34 @@ angular.module('angular-advanced-searchbox', [])
 
                                 var searchParam = $filter('filter')($scope.parameters, function (param) { return param.key === key; })[0];
 
-                                console.log('DISPLAY changeBuffer change: ', change);
+                                // console.log('DISPLAY changeBuffer change: ', change);
                                 // console.log('changeBuffer searchParam: ', searchParam);
 
-                                if (change.key === 'query' && change.command === 'delete') {
+                                if (change.key === 'query' && change.command === 'change') {
+                                    // console.log('changeBuffer change.key: ', change.key);
+                                }
+                                else if (change.key === 'query' && change.command === 'delete') {
+                                    var queryIndex2 = $scope.model.map(function(o) {
+                                        return o.key;
+                                    });
+                                    var queryIndex = queryIndex2.indexOf(change.key);
+                                    // console.log('changeBuffer change.key: ', change.key);
+                                    // console.log('changeBuffer queryIndex2: ', queryIndex2);
+                                    // console.log('changeBuffer queryIndex: ', queryIndex);
+                                    if (queryIndex > -1) {
+                                        $scope.model.splice(queryIndex, 1);
+                                    }
                                     $scope.searchQuery = '';
                                     return;
                                 }
                                 else if (change.command === 'delete') {
-                                    var index = $scope.model.map(function(o) {
+                                    var index2 = $scope.model.map(function(o) {
                                         return o.index;
-                                    }).indexOf(change.index);
-                                    console.log('changeBuffer change.index: ', change.index);
-                                    console.log('changeBuffer index: ', index);
+                                    });
+                                    var index = index2.indexOf(change.index);
+                                    // console.log('changeBuffer change.index: ', change.index);
+                                    // console.log('changeBuffer index2: ', index2);
+                                    // console.log('changeBuffer index: ', index);
                                     if (index > -1) {
                                         $scope.model.splice(index, 1);
                                     }
