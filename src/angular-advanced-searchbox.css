@@ -121,8 +121,8 @@
         .advancedSearchBox .search-parameter-suggestions .title {
             color: #888;
             display: inline-block;
-            font-size: 14px;
-            font-weight: 600;
+            font-size: 12px;
+            font-weight: 500;
             height: 25px;
             line-height: 25px;
             margin: 7px 7px 0 0;
