@@ -39,7 +39,7 @@ angular.module('angular-advanced-searchbox', [])
                     $scope.parametersLabel = $scope.parametersLabel || 'Parameter Suggestions';
                     $scope.parametersDisplayLimit = $scope.parametersDisplayLimit || 8;
                     $scope.placeholder = $scope.placeholder || 'Search ...';
-                    $scope.searchThrottleTime = $scope.searchThrottleTime || 0;
+                    $scope.searchThrottleTime = $scope.searchThrottleTime || 500;
                     $scope.searchParams = [];
                     $scope.searchQuery = '';
                     $scope.setFocusFor = setFocusFor;
@@ -71,64 +71,6 @@ angular.module('angular-advanced-searchbox', [])
                         for (iM = 0; iM < a.length; iM++) {
                             console.log('$scope.$watch: ', a[iM]);
                         }
-
-                        /* @TODO START */
-                        angular.forEach($scope.model, function (value, key) {
-
-                            console.log('value: ', value);
-                            console.log('key: ', key);
-
-                            if (key === 'query' && $scope.searchQuery !== value) {
-                                $scope.searchQuery = value;
-                            } else {
-                                var paramTemplate = $filter('filter')($scope.parameters, function (param) { return param.key === key; })[0];
-                                var searchParams = $filter('filter')($scope.searchParams, function (param) { return param.key === key; });
-
-                                console.log('paramTemplate: ', paramTemplate);
-                                console.log('searchParams: ', searchParams);
-
-                                if (paramTemplate !== undefined) {
-                                    if (paramTemplate.allowMultiple) {
-                                        // ensure array data structure
-                                        if (!angular.isArray(value)) {
-                                            value = [value];
-                                        }
-
-                                        // for each value in the value array: check for adding a new parameter or update it's value
-                                        value.forEach(function(val, valIndex) {
-                                            if (searchParams.some(function (param) { return param.index === valIndex; })) {
-                                                var param = searchParams.filter(function (param) {return param.index === valIndex; });
-                                                if (param[0].value !== val) {
-                                                    param[0].value = val;
-                                                }
-                                            } else {
-                                                $scope.addSearchParam(paramTemplate, val, false);
-                                            }
-                                        });
-
-                                        // check if there're more search parameters active then values and remove them
-                                        if (value.length < searchParams.length) {
-                                            for (var i = value.length; i < searchParams.length; i++) {
-                                                $scope.removeSearchParam($scope.searchParams.indexOf(searchParams[i]));
-                                            }
-                                        }
-                                    } else {
-                                        if (searchParams.length === 0) {
-                                            // add param if missing
-                                            $scope.addSearchParam(paramTemplate, value, false);
-                                        } else {
-                                            // update value of parameter if not equal
-                                            if (searchParams[0].value !== value) {
-                                                searchParams[0].value = value;
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        });
-
-                        /* @TODO END */
-
 
                         // delete not existing search parameters from internal state array
                         /*
