@@ -82,7 +82,8 @@
         }
 
         .advancedSearchBox .search-parameter .value span {
-            color: #666;
+            /*color: #666;*/
+            font-weight: 500;
         }
 
         .advancedSearchBox .search-parameter .value input {
