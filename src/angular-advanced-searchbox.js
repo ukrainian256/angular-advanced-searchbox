@@ -35,7 +35,7 @@ angular.module('angular-advanced-searchbox', [])
                     };
                     $scope.model = $scope.model || [];
                     $scope.parameters = $scope.parameters || [];
-                    $scope.filteredArr = $scope.parameters;
+                    $scope.filteredArr = [];
                     $scope.parametersLabel = $scope.parametersLabel || 'Parameter Suggestions';
                     $scope.parametersDisplayLimit = $scope.parametersDisplayLimit || 8;
                     $scope.placeholder = $scope.placeholder || 'Search ...';
@@ -69,6 +69,10 @@ angular.module('angular-advanced-searchbox', [])
 
                     }, true); // END WATCH MODEL
                     */
+
+                    $scope.resetFilteredArr = function() {
+                        $scope.filteredArr = angular.copy($scope.parameters);
+                    };
 
                     $scope.searchParamValueChanged = function (param) {
                         updateModel('change', param.key, param.index, param.value);
@@ -138,6 +142,7 @@ angular.module('angular-advanced-searchbox', [])
                         console.log('Running $scope.searchQueryTypeaheadOnSelect DELETE: ', item, model, label);
                         $scope.addSearchParam(item);
                         $scope.searchQuery = '';
+                        $scope.resetFilteredArr();
                         updateModel('delete', 'query', 0);
                     };
 
