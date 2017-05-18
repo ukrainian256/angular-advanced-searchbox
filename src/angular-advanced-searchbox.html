@@ -1,14 +1,15 @@
 <div class="advancedSearchBox" ng-class="{active:focus}" ng-init="focus = false" ng-click="!focus ? setFocusFor('searchbox') : null">
+
     <span ng-show="searchParams.length < 1 && searchQuery.length === 0" class="search-icon glyphicon glyphicon-search"></span>
     <a ng-href="" ng-show="searchParams.length > 0 || searchQuery.length > 0" ng-click="removeAll()" role="button">
         <span class="remove-all-icon glyphicon glyphicon-trash"></span>
     </a>
-    <div>
+    <div class="searchBox clearfix">
         <div class="search-parameter" ng-repeat="searchParam in searchParams">
             <a ng-href="" ng-click="removeSearchParam($index)" role="button">
-                <span class="remove glyphicon glyphicon-trash"></span>
+                &times;
             </a>
-            <div class="key" data-key="{{searchParam.key}}" ng-click="enterEditMode($event, $index)">{{searchParam.name}}:</div>
+            <div class="key" ng-show="searchParam.type !== 'operator'" data-key="{{searchParam.key}}" data-type="{{searchParam.type}}" ng-click="enterEditMode($event, $index)">{{searchParam.name}}:</div>
             <div class="value">
                 <span ng-show="!searchParam.editMode" ng-click="enterEditMode($event, $index)">{{searchParam.value | toString:searchParam.suggestedToString}}</span>
                 <input name="value"
@@ -31,26 +32,69 @@
                        ng-trim="false" />
             </div>
         </div>
-        <input name="searchbox"
-               class="search-parameter-input"
-               type="text"
-               nit-auto-size-input
-               set-focus-on="searchbox"
-               ng-keydown="keydown($event)"
-               placeholder="{{placeholder}}"
-               ng-focus="focus = true"
-               ng-blur="focus = false"
-               uib-typeahead="parameter as parameter.name for parameter in parameters | filter:isUnsedParameter | filter:{name:$viewValue} | limitTo:parametersDisplayLimit"
-               typeahead-on-select="searchQueryTypeaheadOnSelect($item, $model, $label)"
-               ng-change="searchQueryChanged(searchQuery)"
-               ng-model="searchQuery" />
+        <div class="search-entry" uib-dropdown is-open="status.isopen">
+            <input
+                autocomplete="off"
+                uib-dropdown-toggle
+                name="searchbox"
+                class="search-parameter-input"
+                type="text"
+                nit-auto-size-input
+                set-focus-on="searchbox"
+                ng-keydown="keydown($event)"
+                ng-keyup="keyup($event)"
+                placeholder="{{placeholder}}"
+                ng-focus="focus = true"
+                ng-blur="focus = false"
+                xxx-uib-typeahead="parameter as parameter.name for parameter in parameters | filter:isUnusedParameter | filter:{name:$viewValue} | limitTo:parametersDisplayLimit"
+                xxx-typeahead-on-select="searchQueryTypeaheadOnSelect($item, $model, $label)"
+                ng-change="searchQueryChanged(searchQuery)"
+                ng-model="searchQuery" />
+
+            <ul class="dropdown-menu" uib-dropdown-menu role="menu">
+                <!-- Step 0 - show only, if we have 1 or more search queries -->
+                <li>
+                    <a href="" ng-click="">
+                        <i class="glyphicon glyphicon-search"></i>
+                        Search
+                    </a>
+                </li>
+                <li class="divider"></li>
+                <!-- Step 1 -->
+                <li ng-repeat="parameter in filteredArr" xxx-ng-show="!facetSelected">
+                    <a ng-click="searchQueryTypeaheadOnSelect(parameter)"
+                       ng-show="!isMatchLabel(parameter.label)">{{ parameter.name }}</a>
+                    <a ng-click="searchQueryTypeaheadOnSelect(parameter)"
+                       ng-show="isMatchLabel(parameter.label)">
+                       {{ parameter.label[0] }}<span class="match">{{ parameter.label[1] }}</span>{{ parameter.label[2] }}
+                    </a>
+                </li>
+                <!-- Step 2 -->
+                <li ng-repeat="parameter in filteredArr" xxx-ng-show="facetSelected">
+                    <a ng-click="optionClicked($index, $event, parameter)"
+                       ng-show="!isMatchLabel(parameter)">
+                       {{ parameter.name }}
+                    </a>
+                    <a ng-click="optionClicked($index, $event, option.key)"
+                       ng-show="isMatchLabel(option.label)">
+                       {{ parameter.label[0] }}<span class="match">{{ parameter.label[1] }}</span>{{ parameter.label[2] }}
+                    </a>
+                </li>
+            </ul>
+
+        </div>
     </div>
-    <div class="search-parameter-suggestions" ng-show="parameters && focus && canAddParameter()">
+    <div class="search-parameter-suggestions clearfix" xxx-ng-show="parameters && focus && canAddParameter()">
         <span class="title">{{parametersLabel}}:</span>
-        <span class="search-parameter" ng-repeat="param in parameters | filter:isUnsedParameter | limitTo:parametersDisplayLimit"
+        <span class="search-parameter" ng-repeat="param in parameters | filter:isUnusedParameter | limitTo:parametersDisplayLimit"
           data-key="{{param.key}}"
           ng-mousedown="addSearchParam(param)">
           {{param.name}} <i ng-class="{'glyphicon glyphicon-plus': param.allowMultiple}"></i>
         </span>
     </div>
+
+    searchQuery: {{searchQuery | json }}
+    <br>
+    filteredArr: {{filteredArr | json }}
+
 </div>
