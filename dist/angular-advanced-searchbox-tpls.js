@@ -35,11 +35,11 @@ angular.module('angular-advanced-searchbox', [])
                     };
                     $scope.model = $scope.model || [];
                     $scope.parameters = $scope.parameters || [];
-                    $scope.filteredArr = $scope.parameters;
-                    $scope.parametersLabel = $scope.parametersLabel || 'Parameter Suggestions';
+                    $scope.filteredArr = [];
+                    $scope.parametersLabel = $scope.parametersLabel || 'Search Suggestions';
                     $scope.parametersDisplayLimit = $scope.parametersDisplayLimit || 8;
                     $scope.placeholder = $scope.placeholder || 'Search ...';
-                    $scope.searchThrottleTime = $scope.searchThrottleTime || 0;
+                    $scope.searchThrottleTime = $scope.searchThrottleTime || 250;
                     $scope.searchParams = [];
                     $scope.searchQuery = '';
                     $scope.setFocusFor = setFocusFor;
@@ -60,88 +60,19 @@ angular.module('angular-advanced-searchbox', [])
                         $scope.status.isopen = false;
                     };
 
+                    /*
                     $scope.$watch('model', function (newValue, oldValue) {
 
                         if (angular.equals(newValue, oldValue)) {
                             return;
                         }
 
-                        var iM,
-                            a = $scope.model;
-                        for (iM = 0; iM < a.length; iM++) {
-                            console.log('$scope.$watch: ', a[iM]);
-                        }
-
-                        /* @TODO START */
-                        angular.forEach($scope.model, function (value, key) {
-
-                            console.log('value: ', value);
-                            console.log('key: ', key);
-
-                            if (key === 'query' && $scope.searchQuery !== value) {
-                                $scope.searchQuery = value;
-                            } else {
-                                var paramTemplate = $filter('filter')($scope.parameters, function (param) { return param.key === key; })[0];
-                                var searchParams = $filter('filter')($scope.searchParams, function (param) { return param.key === key; });
-
-                                console.log('paramTemplate: ', paramTemplate);
-                                console.log('searchParams: ', searchParams);
-
-                                if (paramTemplate !== undefined) {
-                                    if (paramTemplate.allowMultiple) {
-                                        // ensure array data structure
-                                        if (!angular.isArray(value)) {
-                                            value = [value];
-                                        }
-
-                                        // for each value in the value array: check for adding a new parameter or update it's value
-                                        value.forEach(function(val, valIndex) {
-                                            if (searchParams.some(function (param) { return param.index === valIndex; })) {
-                                                var param = searchParams.filter(function (param) {return param.index === valIndex; });
-                                                if (param[0].value !== val) {
-                                                    param[0].value = val;
-                                                }
-                                            } else {
-                                                $scope.addSearchParam(paramTemplate, val, false);
-                                            }
-                                        });
-
-                                        // check if there're more search parameters active then values and remove them
-                                        if (value.length < searchParams.length) {
-                                            for (var i = value.length; i < searchParams.length; i++) {
-                                                $scope.removeSearchParam($scope.searchParams.indexOf(searchParams[i]));
-                                            }
-                                        }
-                                    } else {
-                                        if (searchParams.length === 0) {
-                                            // add param if missing
-                                            $scope.addSearchParam(paramTemplate, value, false);
-                                        } else {
-                                            // update value of parameter if not equal
-                                            if (searchParams[0].value !== value) {
-                                                searchParams[0].value = value;
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        });
-
-                        /* @TODO END */
-
-
-                        // delete not existing search parameters from internal state array
-                        /*
-                        for (var i = $scope.searchParams.length - 1; i >= 0; i--) {
-                            var value = $scope.searchParams[i];
-                            if (!$scope.model.hasOwnProperty(value.key)) {
-                                var index = $scope.searchParams.map(function(e) { return e.key; }).indexOf(value.key);
-                                $scope.removeSearchParam(index);
-                            }
-                        }
-                        */
-
                     }, true); // END WATCH MODEL
+                    */
+
+                    $scope.resetFilteredArr = function() {
+                        $scope.filteredArr = angular.copy($scope.parameters);
+                    };
 
                     $scope.searchParamValueChanged = function (param) {
                         updateModel('change', param.key, param.index, param.value);
@@ -211,6 +142,7 @@ angular.module('angular-advanced-searchbox', [])
                         console.log('Running $scope.searchQueryTypeaheadOnSelect DELETE: ', item, model, label);
                         $scope.addSearchParam(item);
                         $scope.searchQuery = '';
+                        $scope.resetFilteredArr();
                         updateModel('delete', 'query', 0);
                     };
 
@@ -221,30 +153,6 @@ angular.module('angular-advanced-searchbox', [])
                         $scope.searchParamValueChanged(searchParam);
                     };
 
-                    $scope.isUnusedParameter = function (value, index) {
-                        // @TODO Refactor if needed, else delete
-                        // var myFilterTest = $filter('filter')($scope.searchParams, function (param) {
-                        //     return param.key === value.key && !param.allowMultiple;
-                        // }).length === 0;
-                        // return myFilterTest;
-                        return true;
-                    };
-
-                    $scope.canAddParameter = function () {
-                      var availableParameters = $scope.parameters.length;
-                        for (var i = 0; i < $scope.parameters.length; i++) {
-                            if (!$scope.parameters[i].allowMultiple) {
-                                for ( var j = 0; j < $scope.searchParams.length; j++) {
-                                  if ($scope.parameters[i].key === $scope.searchParams[j].key) {
-                                    availableParameters -= 1;
-                                    break;
-                                  }
-                                }
-                            }
-                        }
-                        return availableParameters > 0;
-                    };
-
                     $scope.addSearchParam = function (searchParam, value, enterEditModel) {
 
                         console.log('Running addSearchParam - searchParam, value, enterEditModel: ', searchParam, value, enterEditModel);
@@ -252,10 +160,6 @@ angular.module('angular-advanced-searchbox', [])
                         if (enterEditModel === undefined) {
                             enterEditModel = true;
                         }
-
-                        // if (!$scope.isUnusedParameter(searchParam)) {
-                        //     return;
-                        // }
 
                         var internalIndex = $scope.model.length;
 
@@ -266,7 +170,6 @@ angular.module('angular-advanced-searchbox', [])
                                     name: searchParam.name,
                                     type: searchParam.type || 'text',
                                     placeholder: searchParam.placeholder,
-                                    allowMultiple: searchParam.allowMultiple || false,
                                     suggestedValues: searchParam.suggestedValues || [],
                                     suggestedToString: searchParam.suggestedToString || '',
                                     restrictToSuggestedValues: searchParam.restrictToSuggestedValues || false,
@@ -296,15 +199,6 @@ angular.module('angular-advanced-searchbox', [])
 
                         var searchParam = $scope.searchParams[index];
                         $scope.searchParams.splice(index, 1);
-
-                        // reassign internal index
-                        if (searchParam.allowMultiple) {
-                            var paramsOfSameKey = $filter('filter')($scope.searchParams, function (param) { return param.key === searchParam.key; });
-
-                            for (var i = 0; i < paramsOfSameKey.length; i++) {
-                                paramsOfSameKey[i].index = i;
-                            }
-                        }
 
                         updateModel('delete', searchParam.key, searchParam.index);
 
@@ -523,30 +417,41 @@ angular.module('angular-advanced-searchbox', [])
                             value: value
                         });
 
-                        $scope.model = $scope.searchParams;
 
-                        /*
                         searchThrottleTimer = $timeout(function () {
-                            // console.log('searchThrottleTimer: ', searchThrottleTimer);
-                            // console.log('changeBuffer: ', JSON.stringify(changeBuffer));
 
                             angular.forEach(changeBuffer, function (change) {
 
                                 var searchParam = $filter('filter')($scope.parameters, function (param) { return param.key === key; })[0];
 
-                                console.log('DISPLAY changeBuffer change: ', change);
+                                // console.log('DISPLAY changeBuffer change: ', change);
                                 // console.log('changeBuffer searchParam: ', searchParam);
 
-                                if (change.key === 'query' && change.command === 'delete') {
+                                if (change.key === 'query' && change.command === 'change') {
+                                    // console.log('changeBuffer change.key: ', change.key);
+                                }
+                                else if (change.key === 'query' && change.command === 'delete') {
+                                    var queryIndex2 = $scope.model.map(function(o) {
+                                        return o.key;
+                                    });
+                                    var queryIndex = queryIndex2.indexOf(change.key);
+                                    // console.log('changeBuffer change.key: ', change.key);
+                                    // console.log('changeBuffer queryIndex2: ', queryIndex2);
+                                    // console.log('changeBuffer queryIndex: ', queryIndex);
+                                    if (queryIndex > -1) {
+                                        $scope.model.splice(queryIndex, 1);
+                                    }
                                     $scope.searchQuery = '';
                                     return;
                                 }
                                 else if (change.command === 'delete') {
-                                    var index = $scope.model.map(function(o) {
+                                    var index2 = $scope.model.map(function(o) {
                                         return o.index;
-                                    }).indexOf(change.index);
-                                    console.log('changeBuffer change.index: ', change.index);
-                                    console.log('changeBuffer index: ', index);
+                                    });
+                                    var index = index2.indexOf(change.index);
+                                    // console.log('changeBuffer change.index: ', change.index);
+                                    // console.log('changeBuffer index2: ', index2);
+                                    // console.log('changeBuffer index: ', index);
                                     if (index > -1) {
                                         $scope.model.splice(index, 1);
                                     }
@@ -560,9 +465,6 @@ angular.module('angular-advanced-searchbox', [])
                                     $scope.model.splice(change.index, 1, change);
                                 }
 
-                                // @TODO
-                                // if (searchParam && searchParam.allowMultiple) {
-                                // }
                             });
 
                             changeBuffer.length = 0;
@@ -570,7 +472,6 @@ angular.module('angular-advanced-searchbox', [])
                             $scope.$emit('advanced-searchbox:modelUpdated', $scope.model);
 
                         }, $scope.searchThrottleTime);
-                        */
                     }
 
                     function getCurrentCaretPosition(input) {
@@ -691,7 +592,7 @@ angular.module('angular-advanced-searchbox').run(['$templateCache', function($te
   'use strict';
 
   $templateCache.put('angular-advanced-searchbox.html',
-    "<div class=advancedSearchBox ng-class={active:focus} ng-init=\"focus = false\" ng-click=\"!focus ? setFocusFor('searchbox') : null\"><span ng-show=\"searchParams.length < 1 && searchQuery.length === 0\" class=\"search-icon glyphicon glyphicon-search\"></span> <a ng-href=\"\" ng-show=\"searchParams.length > 0 || searchQuery.length > 0\" ng-click=removeAll() role=button><span class=\"remove-all-icon glyphicon glyphicon-trash\"></span></a><div class=\"searchBox clearfix\"><div class=search-parameter ng-repeat=\"searchParam in searchParams\"><a ng-href=\"\" ng-click=removeSearchParam($index) role=button>&times;</a><div class=key ng-show=\"searchParam.type !== 'operator'\" data-key={{searchParam.key}} data-type={{searchParam.type}} ng-click=\"enterEditMode($event, $index)\">{{searchParam.name}}:</div><div class=value><span ng-show=!searchParam.editMode ng-click=\"enterEditMode($event, $index)\">{{searchParam.value | toString:searchParam.suggestedToString}}</span> <input name=value type={{searchParam.type}} nit-auto-size-input set-focus-on=\"{{'searchParam:' + searchParam.key}}\" ng-keydown=\"keydown($event, $index)\" ng-blur=\"maybeLeaveEditMode($event, $index)\" ng-show=searchParam.editMode ng-change=\"searchParam.restrictToSuggestedValues !== true ? searchParamValueChanged(searchParam) : null\" ng-model=searchParam.value uib-typeahead=\"suggestedValue as suggestedValue.name for suggestedValue in searchParam.suggestedValues | filter:$viewValue\" typeahead-min-length=0 typeahead-on-select=\"searchParamTypeaheadOnSelect($item, searchParam)\" typeahead-editable=\"searchParam.restrictToSuggestedValues !== true\" typeahead-select-on-exact=true typeahead-select-on-blur=\"searchParam.restrictToSuggestedValues !== true ? false : true\" placeholder={{searchParam.placeholder}} ng-click=\"enterEditMode($event, $index)\" ng-trim=\"false\"></div></div><div class=search-entry uib-dropdown is-open=status.isopen><input autocomplete=off uib-dropdown-toggle name=searchbox class=search-parameter-input nit-auto-size-input set-focus-on=searchbox ng-keydown=keydown($event) ng-keyup=keyup($event) placeholder={{placeholder}} ng-focus=\"focus = true\" ng-blur=\"focus = false\" xxx-uib-typeahead=\"parameter as parameter.name for parameter in parameters | filter:isUnusedParameter | filter:{name:$viewValue} | limitTo:parametersDisplayLimit\" xxx-typeahead-on-select=\"searchQueryTypeaheadOnSelect($item, $model, $label)\" ng-change=searchQueryChanged(searchQuery) ng-model=\"searchQuery\"><ul class=dropdown-menu uib-dropdown-menu role=menu><li><a href=\"\" ng-click=\"\"><i class=\"glyphicon glyphicon-search\"></i> Search</a></li><li class=divider></li><li ng-repeat=\"parameter in filteredArr\" xxx-ng-show=!facetSelected><a ng-click=searchQueryTypeaheadOnSelect(parameter) ng-show=!isMatchLabel(parameter.label)>{{ parameter.name }}</a> <a ng-click=searchQueryTypeaheadOnSelect(parameter) ng-show=isMatchLabel(parameter.label)>{{ parameter.label[0] }}<span class=match>{{ parameter.label[1] }}</span>{{ parameter.label[2] }}</a></li><li ng-repeat=\"parameter in filteredArr\" xxx-ng-show=facetSelected><a ng-click=\"optionClicked($index, $event, parameter)\" ng-show=!isMatchLabel(parameter)>{{ parameter.name }}</a> <a ng-click=\"optionClicked($index, $event, option.key)\" ng-show=isMatchLabel(option.label)>{{ parameter.label[0] }}<span class=match>{{ parameter.label[1] }}</span>{{ parameter.label[2] }}</a></li></ul></div></div><div class=\"search-parameter-suggestions clearfix\" xxx-ng-show=\"parameters && focus && canAddParameter()\"><span class=title>{{parametersLabel}}:</span> <span class=search-parameter ng-repeat=\"param in parameters | filter:isUnusedParameter | limitTo:parametersDisplayLimit\" data-key={{param.key}} ng-mousedown=addSearchParam(param)>{{param.name}} <i ng-class=\"{'glyphicon glyphicon-plus': param.allowMultiple}\"></i></span></div><strong>searchQuery:</strong> {{searchQuery | json }}<br><strong>searchParams</strong><br>LENGTH: {{searchParams.length}}<br>CONTENT {{searchParams | json}}</div>"
+    "<div class=advancedSearchBox ng-class={active:focus} ng-init=\"focus = false\" ng-click=\"!focus ? setFocusFor('searchbox') : null\"><span ng-show=\"searchParams.length < 1 && searchQuery.length === 0\" class=\"search-icon glyphicon glyphicon-search\"></span> <a ng-href=\"\" ng-show=\"searchParams.length > 0 || searchQuery.length > 0\" ng-click=removeAll() role=button><span class=\"remove-all-icon glyphicon glyphicon-trash\"></span></a><div class=\"searchBox clearfix\"><div class=search-parameter ng-repeat=\"searchParam in searchParams\"><a ng-href=\"\" ng-click=removeSearchParam($index) role=button>&times;</a><div class=key ng-show=\"searchParam.type !== 'operator'\" data-key={{searchParam.key}} data-type={{searchParam.type}} ng-click=\"enterEditMode($event, $index)\">{{searchParam.name}}:</div><div class=value><span ng-show=!searchParam.editMode ng-click=\"enterEditMode($event, $index)\">{{searchParam.value | toString:searchParam.suggestedToString}}</span> <input name=value type={{searchParam.type}} nit-auto-size-input set-focus-on=\"{{'searchParam:' + searchParam.key}}\" ng-keydown=\"keydown($event, $index)\" ng-blur=\"maybeLeaveEditMode($event, $index)\" ng-show=searchParam.editMode ng-change=\"searchParam.restrictToSuggestedValues !== true ? searchParamValueChanged(searchParam) : null\" ng-model=searchParam.value uib-typeahead=\"suggestedValue as suggestedValue.name for suggestedValue in searchParam.suggestedValues | filter:$viewValue\" typeahead-min-length=0 typeahead-on-select=\"searchParamTypeaheadOnSelect($item, searchParam)\" typeahead-editable=\"searchParam.restrictToSuggestedValues !== true\" typeahead-select-on-exact=true typeahead-select-on-blur=\"searchParam.restrictToSuggestedValues !== true ? false : true\" placeholder={{searchParam.placeholder}} ng-click=\"enterEditMode($event, $index)\" ng-trim=\"false\"></div></div><div class=search-entry uib-dropdown is-open=status.isopen><input autocomplete=off uib-dropdown-toggle name=searchbox class=search-parameter-input nit-auto-size-input set-focus-on=searchbox ng-keydown=keydown($event) ng-keyup=keyup($event) placeholder={{placeholder}} ng-focus=\"focus = true\" ng-blur=\"focus = false\" xxx-uib-typeahead=\"parameter as parameter.name for parameter in parameters | filter:isUnusedParameter | filter:{name:$viewValue} | limitTo:parametersDisplayLimit\" xxx-typeahead-on-select=\"searchQueryTypeaheadOnSelect($item, $model, $label)\" ng-change=searchQueryChanged(searchQuery) ng-model=\"searchQuery\"><ul class=dropdown-menu uib-dropdown-menu role=menu><li><a href=\"\" ng-click=\"\" class=\"btn btn-primary\" style=\"margin-left: 4px; margin-right: 4px; color: #fff; margin-bottom: 4px\"><i class=\"glyphicon glyphicon-search\"></i> Search</a></li><li ng-repeat=\"parameter in filteredArr\" xxx-ng-show=!facetSelected><a ng-click=searchQueryTypeaheadOnSelect(parameter) ng-show=!isMatchLabel(parameter.label)>{{ parameter.name }}</a> <a ng-click=searchQueryTypeaheadOnSelect(parameter) ng-show=isMatchLabel(parameter.label)>{{ parameter.label[0] }}<span class=match>{{ parameter.label[1] }}</span>{{ parameter.label[2] }}</a></li><li class=hide ng-repeat=\"parameter in filteredArr\" xxx-ng-show=facetSelected><a ng-click=\"optionClicked($index, $event, parameter)\" ng-show=!isMatchLabel(parameter)>{{ parameter.name }}</a> <a ng-click=\"optionClicked($index, $event, option.key)\" ng-show=isMatchLabel(option.label)>{{ parameter.label[0] }}<span class=match>{{ parameter.label[1] }}</span>{{ parameter.label[2] }}</a></li><li class=divider></li><li><a href=\"\">Reset filters</a></li></ul></div></div><div class=\"search-parameter-suggestions clearfix\" xxx-ng-show=\"parameters && focus\"><span class=title>{{parametersLabel}}:</span> <span class=search-parameter ng-repeat=\"param in parameters | filter:isUnusedParameter | limitTo:parametersDisplayLimit\" data-key={{param.key}} ng-mousedown=addSearchParam(param)>{{param.name}}</span></div><div class=\"small hide\"><strong>parameters:</strong> {{ parameters | json }}<br><strong>filteredArr</strong>: {{filteredArr | json }}<br><strong>searchQuery:</strong> {{searchQuery | json }}<br><strong>searchParams</strong><br>LENGTH: {{searchParams.length}}<br>CONTENT {{searchParams | json}}</div></div>"
   );
 
 }]);
