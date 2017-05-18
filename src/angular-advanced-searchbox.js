@@ -36,7 +36,7 @@ angular.module('angular-advanced-searchbox', [])
                     $scope.model = $scope.model || [];
                     $scope.parameters = $scope.parameters || [];
                     $scope.filteredArr = [];
-                    $scope.parametersLabel = $scope.parametersLabel || 'Parameter Suggestions';
+                    $scope.parametersLabel = $scope.parametersLabel || 'Search Suggestions';
                     $scope.parametersDisplayLimit = $scope.parametersDisplayLimit || 8;
                     $scope.placeholder = $scope.placeholder || 'Search ...';
                     $scope.searchThrottleTime = $scope.searchThrottleTime || 500;
