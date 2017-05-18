@@ -15,7 +15,7 @@
     border: 1px solid #ccc;
     border-radius: 3px;
     height: auto;
-    min-height: 38px;
+    min-height: 40px;
     padding: 0 9px;
 }
 
@@ -52,7 +52,7 @@
         display: inline-block;
         height: 24px;
         line-height: 24px;
-        margin: 6px 2px 0 0;
+        margin: 7px 2px 0 0;
         padding: 0 5px;
         transition: box-shadow 100ms linear;
     }
@@ -92,6 +92,7 @@
 
     .advancedSearchBox .search-entry {
         float: left;
+        margin-top: 1px;
     }
 
         .advancedSearchBox .search-entry .match {
