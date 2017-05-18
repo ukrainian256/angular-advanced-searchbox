@@ -93,8 +93,12 @@
         </span>
     </div>
 
-    searchQuery: {{searchQuery | json }}
+    <strong>searchQuery:</strong> {{searchQuery | json }}
     <br>
-    filteredArr: {{filteredArr | json }}
+    <strong>searchParams</strong>
+    <br>LENGTH: {{searchParams.length}}
+    <br>CONTENT {{searchParams | json}}
+    <!-- <br>
+    filteredArr: {{filteredArr | json }} -->
 
 </div>
