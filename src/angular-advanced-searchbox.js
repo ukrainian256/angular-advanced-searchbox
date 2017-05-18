@@ -60,26 +60,15 @@ angular.module('angular-advanced-searchbox', [])
                         $scope.status.isopen = false;
                     };
 
+                    /*
                     $scope.$watch('model', function (newValue, oldValue) {
 
                         if (angular.equals(newValue, oldValue)) {
                             return;
                         }
 
-                        // delete not existing search parameters from internal state array
-                        // @TODO START
-                        for (var i = 0; i < $scope.searchParams.length; i++) {
-                            var value = $scope.searchParams[i];
-                            console.log('$scope.$watch: value', value);
-                            if (!$scope.model.hasOwnProperty(value.key)) {
-                                var index = $scope.searchParams.map(function(e) { return e.key; }).indexOf(value.key);
-                                console.log('$scope.$watch: index', index);
-                                $scope.removeSearchParam(index);
-                            }
-                        }
-                        // @TODO END
-
                     }, true); // END WATCH MODEL
+                    */
 
                     $scope.searchParamValueChanged = function (param) {
                         updateModel('change', param.key, param.index, param.value);
