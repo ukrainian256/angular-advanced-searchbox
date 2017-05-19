@@ -38,7 +38,7 @@ angular.module('angular-advanced-searchbox', [])
                     $scope.filteredArr = [];
                     $scope.parametersLabel = $scope.parametersLabel || 'Search Suggestions';
                     $scope.parametersDisplayLimit = $scope.parametersDisplayLimit || 8;
-                    $scope.placeholder = $scope.placeholder || 'Search ...';
+                    $scope.placeholder = $scope.placeholder || '&hellip;';
                     $scope.searchThrottleTime = $scope.searchThrottleTime || 250;
                     $scope.searchParams = [];
                     $scope.searchQuery = '';
@@ -507,8 +507,6 @@ angular.module('angular-advanced-searchbox', [])
                 restrict: 'A',
                 link: function($scope, $element, $attrs) {
                     return $scope.$on('advanced-searchbox:setFocusOn', function(e, id) {
-                        // console.log('setFocusOn e: ', e);
-                        console.log('setFocusOn id: ', id);
                         if ($scope.isSpacebarKey === true) {
                             $scope.isSpacebarKey = false;
                             e.preventDefault();
