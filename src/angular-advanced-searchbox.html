@@ -3,7 +3,6 @@
     <i ng-show="searchParams.length < 1 && searchQuery.length === 0"
         class="search-icon material-icons md-18">&#xE8B6;</i>
     <a ng-href="" ng-show="searchParams.length > 0 || searchQuery.length > 0" ng-click="removeAll()" role="button">
-        <!-- <span class="remove-all-icon fa fa-times"></span> -->
         <i class="remove-all-icon material-icons md-18">&#xE5CD;</i>
     </a>
     <div class="searchBox clearfix">
@@ -35,6 +34,7 @@
             </div>
         </div>
         <div class="search-entry" uib-dropdown is-open="status.isopen">
+            <span>Search:</span>
             <input
                 autocomplete="off"
                 uib-dropdown-toggle
@@ -56,8 +56,8 @@
             <ul class="dropdown-menu" uib-dropdown-menu role="menu">
                 <!-- Step 0 - show only, if we have 1 or more search queries -->
                 <li>
-                    <a href="" ng-click="" class="btn btn-primary" style="margin-left: 4px; margin-right: 4px; color: #fff; margin-bottom: 4px;">
-                        <i class="glyphicon glyphicon-search"></i>
+                    <a href="" ng-click="" class="btn">
+                        <i class="material-icons md-18">&#xE8B6;</i>
                         Search
                     </a>
                 </li>
@@ -82,7 +82,12 @@
                     </a>
                 </li>
                 <li class="divider"></li>
-                <li><a href="">Reset filters</a></li>
+                <li>
+                    <a href="">
+                        <i class="material-icons md-18">&#xE5CD;</i>
+                        Reset filters
+                    </a>
+                </li>
             </ul>
 
         </div>
@@ -96,7 +101,7 @@
         </span>
     </div>
 
-    <div class="small hide">
+    <div class="small">
         <strong>parameters: </strong> {{ parameters | json }}
         <br>
         <strong>filteredArr</strong>: {{filteredArr | json }}
