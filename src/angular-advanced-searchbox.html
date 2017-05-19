@@ -1,8 +1,10 @@
 <div class="advancedSearchBox" ng-class="{active:focus}" ng-init="focus = false" ng-click="!focus ? setFocusFor('searchbox') : null">
 
-    <span ng-show="searchParams.length < 1 && searchQuery.length === 0" class="search-icon glyphicon glyphicon-search"></span>
+    <i ng-show="searchParams.length < 1 && searchQuery.length === 0"
+        class="search-icon material-icons md-18">&#xE8B6;</i>
     <a ng-href="" ng-show="searchParams.length > 0 || searchQuery.length > 0" ng-click="removeAll()" role="button">
-        <span class="remove-all-icon glyphicon glyphicon-trash"></span>
+        <!-- <span class="remove-all-icon fa fa-times"></span> -->
+        <i class="remove-all-icon material-icons md-18">&#xE5CD;</i>
     </a>
     <div class="searchBox clearfix">
         <div class="search-parameter" ng-repeat="searchParam in searchParams">

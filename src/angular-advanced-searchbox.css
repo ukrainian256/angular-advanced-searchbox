@@ -35,12 +35,12 @@
 
     .advancedSearchBox .search-icon {
         float: right;
-        padding: 13px 13px 0 10px;
+        padding: 12px 11px 0 10px;
     }
 
     .advancedSearchBox .remove-all-icon {
         float: right;
-        padding: 13px 15px 0 10px;
+        padding: 12px 10px 0 10px;
         cursor: pointer;
     }
 
