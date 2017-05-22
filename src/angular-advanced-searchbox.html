@@ -64,7 +64,10 @@
                 <!-- Step 1 -->
                 <li ng-repeat="parameter in filteredArr" xxx-ng-show="!facetSelected">
                     <a ng-click="searchQueryTypeaheadOnSelect(parameter)"
-                       ng-show="!isMatchLabel(parameter.label)">{{ parameter.name }}</a>
+                       ng-show="!isMatchLabel(parameter.label)">
+                       <span ng-show="parameter.displayName">{{ parameter.name }}</span>
+                       <span ng-show="!parameter.displayName">{{ parameter.name }}</span>
+                   </a>
                     <a ng-click="searchQueryTypeaheadOnSelect(parameter)"
                        ng-show="isMatchLabel(parameter.label)">
                        {{ parameter.label[0] }}<span class="match">{{ parameter.label[1] }}</span>{{ parameter.label[2] }}

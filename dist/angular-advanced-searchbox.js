@@ -35,9 +35,9 @@ angular.module('angular-advanced-searchbox', [])
                     };
                     $scope.model = $scope.model || [];
                     $scope.parameters = $scope.parameters || [];
-                    $scope.filteredArr = [];
+                    $scope.filteredArr = angular.copy($scope.parameters);
                     $scope.parametersLabel = $scope.parametersLabel || 'Search Suggestions';
-                    $scope.parametersDisplayLimit = $scope.parametersDisplayLimit || 8;
+                    $scope.parametersDisplayLimit = $scope.parametersDisplayLimit || 15;
                     $scope.placeholder = $scope.placeholder || '&hellip;';
                     $scope.searchThrottleTime = $scope.searchThrottleTime || 250;
                     $scope.searchParams = [];
@@ -309,14 +309,19 @@ angular.module('angular-advanced-searchbox', [])
                         }
 
                         if (searchVal == ' ') {  // space and field is empty, show menu
+                            console.log('Here we are: searchVal 1');
                             $scope.showMenu(e);
                             $timeout(function() {
                                 $scope.searchQuery = '';
                             });
+                            $scope.filteredArr = angular.copy($scope.parameters);
+                            $scope.showMenu(e);
                             return;
                         }
                         if (searchVal === '') {
+                            console.log('Here we are: searchVal 1');
                             $scope.filteredArr = angular.copy($scope.parameters);
+                            $scope.showMenu(e);
                             // $scope.$apply();
                             // $scope.$emit('textSearch', '', $scope.filter_keys);
                             // if ($scope.facetSelected && $scope.facetSelected.options === undefined) {
@@ -325,6 +330,7 @@ angular.module('angular-advanced-searchbox', [])
                             return;
                         }
                         if (key !== 8 || key !== 46) {
+                            console.log('Here we are: searchVal 3');
                             $scope.filterFacets(e, searchVal);
                         }
 
