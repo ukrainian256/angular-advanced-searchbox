@@ -159,6 +159,6 @@
     vertical-align: middle;
 }
 
-.advancedSearchBox .dropdown-menu li a:hover i {
+.advancedSearchBox .dropdown-menu li a.btn:hover i {
     color: #fff;
 }
